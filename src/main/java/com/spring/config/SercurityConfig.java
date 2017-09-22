@@ -3,6 +3,7 @@ package com.spring.config;
 import com.spring.Service.CustomDetailService;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,28 +28,30 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("login").permitAll()
-                .antMatchers("admin").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/login").permitAll()
+                .antMatchers("/admin").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/success")
+                .defaultSuccessUrl("/")
                 .permitAll()
                 .and()
                 .rememberMe()
+                .key("security_key")
+                .rememberMeParameter("remember-me")//需要指定
                 .tokenValiditySeconds(1200)
                 .tokenRepository(tokenRepository())
-                .key("security_key")
                 .and()
                 .logout()
-                .logoutSuccessUrl("/login")
+//                .logoutSuccessUrl("/login")
                 .permitAll();
     }
 
-
+    @Bean
     public JdbcTokenRepositoryImpl tokenRepository(){
         JdbcTokenRepositoryImpl jdbcTokenRepository=new JdbcTokenRepositoryImpl();
+//        jdbcTokenRepository.setCreateTableOnStartup(true);
         jdbcTokenRepository.setDataSource(dataSource);
         return jdbcTokenRepository;
     }
