@@ -32,7 +32,7 @@
         <div sec:authorize="hasAuthority('ROLE_ADMIN')">
             <p class="bg-info" th:text="${msg.etraInfo}"></p>
         </div>
-        <div sec:authorize="hasAuthority('ROLE_USER')">
+        <div sec:authorize="hasAuthority('A_ROLE_ADMIN')">
             <p class="bg-info" >无更多信息显示</p>
         </div>
         <form th:action="@{/logout}" method="post">
