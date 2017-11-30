@@ -23,9 +23,11 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customDetailService);
+        /*auth.inMemoryAuthentication()
+                .withUser("user").password("123").roles("USER");*/
     }
 
-    @Override
+   @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
@@ -38,10 +40,10 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/")
                 .permitAll()
                 .and()
-                .rememberMe()
+                .rememberMe()//关掉浏览器后还能直接进入应用不需登录
                 .key("security_key")
                 .rememberMeParameter("remember-me")//需要指定
-                .tokenValiditySeconds(1200)
+                .tokenValiditySeconds(1200)//指定cookie
                 .tokenRepository(tokenRepository())
                 .and()
                 .logout()
@@ -51,7 +53,7 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resource/static/**");
+        web.ignoring().antMatchers("/resource/static*//**");
     }
 
     @Bean
